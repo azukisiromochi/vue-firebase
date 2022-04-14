@@ -1,13 +1,12 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <button v-on:click="googleLogin">ログイン</button>
   </div>
 </template>
 
 <script>
 import { initializeApp } from "firebase/app"
-import HelloWorld from './components/HelloWorld.vue'
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 
 const config = {
   apiKey: "AIzaSyCb4eKf6YFgicsy0_g7-hqBZ9e6xSanUXk",
@@ -21,8 +20,21 @@ initializeApp(config)
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  methods: {
+    googleLogin() {
+      const auth = getAuth()
+      const provider = new GoogleAuthProvider()
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const credential = GoogleAuthProvider.credentialFromResult(result)
+          const token = credential.accessToken
+          const user = result.user
+          console.log(token)
+          console.log(user)
+        }).catch((error) => {
+          console.log(error)
+        })
+    }
   }
 }
 </script>
